@@ -50,13 +50,14 @@ selected_rubric = RUBRICS[rubric_name]
 
 st.divider()
 
-# Person Selection (3 people)
+# Person Selection
 st.write("### Integrantes a Evaluar")
-names_cols = st.columns(3)
+num_integrantes = st.number_input("Número de integrantes", min_value=1, max_value=6, value=1)
+names_cols = st.columns(num_integrantes)
 names = []
-for i in range(3):
+for i in range(num_integrantes):
     with names_cols[i]:
-        name = st.text_input(f"Persona {i+1}", key=f"person_{i}")
+        name = st.text_input(f"Integrante {i+1}", key=f"person_{i}")
         names.append(name)
 
 st.divider()
@@ -149,7 +150,6 @@ else:
                     conn = st.connection(
                         "gsheets",
                         type=GSheetsConnection,
-                        spreadsheet=gs_secrets.get("spreadsheet"),
                         project_id=gs_secrets.get("project_id"),
                         private_key_id=gs_secrets.get("private_key_id"),
                         private_key=pk,
@@ -165,7 +165,8 @@ else:
                 
                 # Leer datos existentes sin usar el cache (ttl=0)
                 try:
-                    existing_data = conn.read(ttl=0)
+                    spreadsheet_url = gs_secrets.get("spreadsheet")
+                    existing_data = conn.read(spreadsheet=spreadsheet_url, ttl=0)
                     if existing_data is not None and not existing_data.empty:
                         updated_df = pd.concat([existing_data, df], ignore_index=True)
                     else:
@@ -175,7 +176,7 @@ else:
                     updated_df = df
                 
                 # Actualizar la planilla
-                conn.update(data=updated_df)
+                conn.update(spreadsheet=spreadsheet_url, data=updated_df)
                 st.success("\u2705 \u00a1Datos respaldados con \u00e9xito en la planilla!")
             except Exception as e:
                 st.error(f"Error cr\u00edtico de conexi\u00f3n: {e}")

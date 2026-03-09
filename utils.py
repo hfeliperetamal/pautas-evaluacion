@@ -51,7 +51,8 @@ RUBRICS = {
                     "Resume resultados principales y conclusiones en relaci\u00f3n a lo presentado.",
                     "Interpretaci\u00f3n global considerando objetivos, limitaciones y similares.",
                     "Discute limitaciones (sesgo, imprecisi\u00f3n).",
-                    "Demuestra la relevancia del estudio."
+                    "Demuestra la relevancia del estudio.",
+                    "**Referencia Sugerida:** Comparaci\u00f3n de los niveles de actividad f\u00edsica medidos con cuestionario de autorreporte (IPAQ) con medici\u00f3n de acelerometr\u00eda seg\u00fan estado nutricional (Art\u00edculo 5)."
                 ]
             },
             {
