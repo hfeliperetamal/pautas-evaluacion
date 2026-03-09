@@ -65,6 +65,7 @@ st.info("**Criterios de Puntaje:** 5: Sobresaliente | 4: Bueno | 3: Aceptable | 
 
 # Evaluation Form
 evaluations = {name: {} for name in names if name}
+observations = {name: "" for name in names if name}
 
 if not evaluations:
     st.warning("Por favor ingrese al menos un nombre para comenzar la evaluaci\u00f3n.")
@@ -85,39 +86,21 @@ else:
                         )
             st.divider()
 
+    # Observations block
+    st.write("### Observaciones Finales")
+    obs_cols = st.columns(len(evaluations))
+    for idx, name in enumerate(evaluations.keys()):
+        with obs_cols[idx]:
+            observations[name] = st.text_area(f"Observaciones para {name}", key=f"obs_{name}")
+
     if st.button("\u2705 Enviar Evaluaci\u00f3n"):
         if not profesor:
             st.error("El nombre del profesor es obligatorio.")
         else:
             final_results = []
             for name, scores in evaluations.items():
-                # Calculate points per section
-                total_calculated_points = 0
-                for section in selected_rubric["sections"]:
-                    section_scores = [scores[item] for item in section["items"]]
-                    section_sum = sum(section_scores)
-                    # The doc logic: (Sum / (Items * 5)) * Weight? 
-                    # Looking at the doc totals: Gestion Portada 10% (4 items) -> total points 20 (max 4*5=20). 
-                    # If points=20, calc=10% of max pts total? No.
-                    # Calculated value = Points * Weight / MaxSectionPoints
-                    section_max_points = len(section["items"]) * 5
-                    calculated_section_value = (section_sum * section["weight"]) / section_max_points
-                    total_calculated_points += (calculated_section_value / 5) # Normalize to 1-5 scale?
-                    # Re-reading doc logic: 
-                    # Gestion Portada: Weight 10, items 4. Sum/20 * 2 = Calculated value? No, doc says 10% -> /2 pts.
-                    # Max raw points = 5*4 = 20. If points=20, value=2. 
-                    # So: value = (sum / 20) * 2. 
-                    # Actually: TotalCalculated = Sum( (SectionSum / MaxSectionSum) * SectionWeightPoints )
-                
-                # Let's simplify and follow the exact points in the doc:
-                # Gestion max pts: 19.75. Sum of weights: 10+20+15+15+20+10+10 = 100.
-                # Section maxes in pts: 2, 4, 3, 3.75, 4, 2, 2.
-                # Item value = (score/5) * (Weight / Items)
                 total_pts = 0
                 for section in selected_rubric["sections"]:
-                    section_item_weight = section["weight"] / (len(section["items"]) * 5 * 100 / selected_rubric["max_points"])
-                    # Let's use a simpler scaling: 
-                    # Points_Section = (Sum_Section / (Count_Section * 5)) * (Max_Points * Weight / 100)
                     section_points = (sum([scores[item] for item in section["items"]]) / (len(section["items"]) * 5)) * (selected_rubric["max_points"] * section["weight"] / 100)
                     total_pts += section_points
                 
@@ -129,7 +112,8 @@ else:
                     "Pauta": rubric_name,
                     "Estudiante": name,
                     "Puntaje Total": round(total_pts, 2),
-                    "Nota": grade
+                    "Nota": grade,
+                    "Observaciones": observations[name]
                 }
                 final_results.append(res)
             

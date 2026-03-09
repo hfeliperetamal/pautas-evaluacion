@@ -3,6 +3,78 @@ import pandas as pd
 
 # Rubric Data Structures
 RUBRICS = {
+    "Investigaci\u00f3n 2025": {
+        "max_points": 17.75,
+        "sections": [
+            {
+                "name": "Portada de Presentaci\u00f3n",
+                "weight": 10,
+                "items": [
+                    "El t\u00edtulo describe el contenido, breve, claro e informativo.",
+                    "Identifica el dise\u00f1o del estudio (descriptivo, revisi\u00f3n sistem\u00e1tica, etc.).",
+                    "Autores presentados con nombre completo.",
+                    "Distintivos institucionales, kinesiolog\u00eda, ciudad, fecha y a\u00f1o."
+                ]
+            },
+            {
+                "name": "Introducci\u00f3n",
+                "weight": 15,
+                "items": [
+                    "Marco Te\u00f3rico: secuencia y desarrollo de conceptos preciso.",
+                    "Referencias actualizadas que fundamentan la problem\u00e1tica.",
+                    "Objetivos factibles y consistentes con la conceptualizaci\u00f3n te\u00f3rica."
+                ]
+            },
+            {
+                "name": "Material y M\u00e9todos",
+                "weight": 15,
+                "items": [
+                    "Tipo de Estudio claramente especificado y correspondiente.",
+                    "Selecci\u00f3n de sujetos, criterios de inclusi\u00f3n/exclusi\u00f3n, elegibilidad.",
+                    "Instrumento: Detalla correctamente (sensibilidad, validez, confiabilidad, PRISMA, etc.).",
+                    "Variables independientes y dependientes claramente especificadas."
+                ]
+            },
+            {
+                "name": "Resultados",
+                "weight": 20,
+                "items": [
+                    "Expresa los resultados en gr\u00e1ficos/tablas de forma clara.",
+                    "Informaci\u00f3n consistente con el tipo y los objetivos del estudio.",
+                    "Uso correcto de pruebas estad\u00edsticas y significancia (si aplica)."
+                ]
+            },
+            {
+                "name": "Conclusi\u00f3n y Discusi\u00f3n",
+                "weight": 20,
+                "items": [
+                    "Resume resultados principales y conclusiones en relaci\u00f3n a lo presentado.",
+                    "Interpretaci\u00f3n global considerando objetivos, limitaciones y similares.",
+                    "Discute limitaciones (sesgo, imprecisi\u00f3n).",
+                    "Demuestra la relevancia del estudio."
+                ]
+            },
+            {
+                "name": "Formato Presentaci\u00f3n",
+                "weight": 10,
+                "items": [
+                    "Expresi\u00f3n oral: clara, audible, terminolog\u00eda t\u00e9cnica formal.",
+                    "Presentaci\u00f3n escrita: ortograf\u00eda, redacci\u00f3n, est\u00e9tica, secuencia l\u00f3gica.",
+                    "Apoyo audiovisual atractivo, ordenado, claro y coherente.",
+                    "Citas bibliogr\u00e1ficas de acuerdo a normativa (Vancouver/APA)."
+                ]
+            },
+            {
+                "name": "Preguntas y Respuestas",
+                "weight": 10,
+                "items": [
+                    "Responde adecuadamente con fundamentos del m\u00e9todo cient\u00edfico.",
+                    "Respuestas acertadas, coherentes, permiten clarificar.",
+                    "Fundamenta el aporte significativo de la investigaci\u00f3n/gesti\u00f3n."
+                ]
+            }
+        ]
+    },
     "Gesti\u00f3n 2025": {
         "max_points": 19.75,
         "sections": [
@@ -72,80 +144,8 @@ RUBRICS = {
                 "items": [
                     "Expresi\u00f3n oral: clara, audible, terminolog\u00eda t\u00e9cnica formal.",
                     "Presentaci\u00f3n escrita: ortograf\u00eda, redacci\u00f3n, est\u00e9tica, secuencia l\u00f3gica.",
-                    "Apoyo audiovisual atractivo, ordenado, claro y coherente.",
+                    "Apoyo audiovisual atractivo, ordenado, clara y coherente.",
                     "Las referencias y fuentes bibliogr\u00e1ficas est\u00e1n claramente explicitadas."
-                ]
-            }
-        ]
-    },
-    "Investigaci\u00f3n 2025": {
-        "max_points": 17.75,
-        "sections": [
-            {
-                "name": "Portada de Presentaci\u00f3n",
-                "weight": 10,
-                "items": [
-                    "El t\u00edtulo describe el contenido, breve, claro e informativo.",
-                    "Identifica el dise\u00f1o del estudio (descriptivo, revisi\u00f3n sistem\u00e1tica, etc.).",
-                    "Autores presentados con nombre completo.",
-                    "Distintivos institucionales, kinesiolog\u00eda, ciudad, fecha y a\u00f1o."
-                ]
-            },
-            {
-                "name": "Introducci\u00f3n",
-                "weight": 15,
-                "items": [
-                    "Marco Te\u00f3rico: secuencia y desarrollo de conceptos preciso.",
-                    "Referencias actualizadas que fundamentan la problem\u00e1tica.",
-                    "Objetivos factibles y consistentes con la conceptualizaci\u00f3n te\u00f3rica."
-                ]
-            },
-            {
-                "name": "Material y M\u00e9todos",
-                "weight": 15,
-                "items": [
-                    "Tipo de Estudio claramente especificado y correspondiente.",
-                    "Selecci\u00f3n de sujetos, criterios de inclusi\u00f3n/exclusi\u00f3n, elegibilidad.",
-                    "Instrumento: Detalla correctamente (sensibilidad, validez, confiabilidad, PRISMA, etc.).",
-                    "Variables independientes y dependientes claramente especificadas."
-                ]
-            },
-            {
-                "name": "Resultados",
-                "weight": 20,
-                "items": [
-                    "Expresa los resultados en gr\u00e1ficos/tablas de forma clara.",
-                    "Informaci\u00f3n consistente con el tipo y los objetivos del estudio.",
-                    "Uso correcto de pruebas estad\u00edsticas y significancia (si aplica)."
-                ]
-            },
-            {
-                "name": "Conclusi\u00f3n y Discusi\u00f3n",
-                "weight": 20,
-                "items": [
-                    "Resume resultados principales y conclusiones en relaci\u00f3n a lo presentado.",
-                    "Interpretaci\u00f3n global considerando objetivos, limitaciones y similares.",
-                    "Discute limitaciones (sesgo, imprecisi\u00f3n).",
-                    "Demuestra la relevancia del estudio."
-                ]
-            },
-            {
-                "name": "Formato Presentaci\u00f3n",
-                "weight": 10,
-                "items": [
-                    "Expresi\u00f3n oral: clara, audible, terminolog\u00eda t\u00e9cnica formal.",
-                    "Presentaci\u00f3n escrita: ortograf\u00eda, redacci\u00f3n, est\u00e9tica, secuencia l\u00f3gica.",
-                    "Apoyo audiovisual atractivo, ordenado, claro y coherente.",
-                    "Citas bibliogr\u00e1ficas de acuerdo a normativa (Vancouver/APA)."
-                ]
-            },
-            {
-                "name": "Preguntas y Respuestas",
-                "weight": 10,
-                "items": [
-                    "Responde adecuadamente con fundamentos del m\u00e9todo cient\u00edfico.",
-                    "Respuestas acertadas, coherentes, permiten clarificar.",
-                    "Fundamenta el aporte significativo de la investigaci\u00f3n/gesti\u00f3n."
                 ]
             }
         ]
