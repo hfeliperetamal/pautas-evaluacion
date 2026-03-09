@@ -3,7 +3,7 @@ import pandas as pd
 
 # Rubric Data Structures
 RUBRICS = {
-    "Gesti\u00f3n 2024": {
+    "Gesti\u00f3n 2025": {
         "max_points": 19.75,
         "sections": [
             {
