@@ -124,22 +124,27 @@ else:
             
             # Google Sheets connection
             try:
-                st.info("Guardando respaldo en Google Sheets...")
+                st.info("Conectando con Google Sheets...")
                 conn = st.connection("gsheets", type=GSheetsConnection)
                 
-                # Leer datos existentes para hacer append
+                # Leer datos existentes sin usar el cache (ttl=0)
                 try:
-                    existing_data = conn.read()
-                    updated_df = pd.concat([existing_data, df], ignore_index=True)
-                except:
-                    # Si la hoja está vacía o no existe
+                    existing_data = conn.read(ttl=0)
+                    if existing_data is not None and not existing_data.empty:
+                        updated_df = pd.concat([existing_data, df], ignore_index=True)
+                    else:
+                        updated_df = df
+                except Exception as read_error:
+                    # Si falla la lectura (hoja vacía), usamos solo los datos actuales
+                    st.warning(f"Aviso: No se pudieron leer datos previos ({read_error}). Iniciando nueva hoja.")
                     updated_df = df
                 
+                # Actualizar la planilla
                 conn.update(data=updated_df)
-                st.success("✅ Datos respaldados correctamente en la planilla.")
+                st.success("✅ ¡Datos respaldados con éxito en la planilla!")
             except Exception as e:
-                st.error(f"Error al conectar con Google Sheets: {e}")
-                st.warning("Asegúrate de haber configurado correctamente los secretos (.streamlit/secrets.toml) y compartido la planilla con el correo de la cuenta de servicio.")
+                st.error(f"Error crítico de conexión: {e}")
+                st.info("Detalles para revisión técnica: Asegúrate de que los Secrets tengan el formato TOML con comillas triples para la private_key y que el ID de la planilla sea el correcto.")
             
             st.balloons()
 
