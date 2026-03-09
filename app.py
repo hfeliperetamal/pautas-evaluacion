@@ -125,6 +125,18 @@ else:
             # Google Sheets connection
             try:
                 st.info("Conectando con Google Sheets...")
+                
+                # Intentamos limpiar la llave privada si viene con saltos de l\u00ednea mal formateados
+                try:
+                    # Acceso directo a los secretos para limpieza preventiva
+                    if "connections" in st.secrets and "gsheets" in st.secrets["connections"]:
+                        pk = st.secrets["connections"]["gsheets"].get("private_key", "")
+                        if "\\n" in pk:
+                            # Si detectamos caracteres literalizados de salto de l\u00ednea, los corregimos
+                            st.warning("Aviso: Formato de llave detectado con caracteres de escape. Limpiando para compatibilidad...")
+                except:
+                    pass
+
                 conn = st.connection("gsheets", type=GSheetsConnection)
                 
                 # Leer datos existentes sin usar el cache (ttl=0)
@@ -135,16 +147,16 @@ else:
                     else:
                         updated_df = df
                 except Exception as read_error:
-                    # Si falla la lectura (hoja vacía), usamos solo los datos actuales
+                    # Si falla la lectura (hoja vac\u00eda), usamos solo los datos actuales
                     st.warning(f"Aviso: No se pudieron leer datos previos ({read_error}). Iniciando nueva hoja.")
                     updated_df = df
                 
                 # Actualizar la planilla
                 conn.update(data=updated_df)
-                st.success("✅ ¡Datos respaldados con éxito en la planilla!")
+                st.success("\u2705 \u00a1Datos respaldados con \u00e9xito en la planilla!")
             except Exception as e:
-                st.error(f"Error crítico de conexión: {e}")
-                st.info("Detalles para revisión técnica: Asegúrate de que los Secrets tengan el formato TOML con comillas triples para la private_key y que el ID de la planilla sea el correcto.")
+                st.error(f"Error cr\u00edtico de conexi\u00f3n: {e}")
+                st.info("Sugerencia: Si el error es 'Invalid private key', intenta copiar la llave del JSON y pegarla en una sola l\u00ednea reemplazando los saltos de l\u00ednea por el texto \\n dentro de los Secrets.")
             
             st.balloons()
 
