@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from utils import RUBRICS, calculate_grade, get_scoring_details
 from datetime import datetime
+from streamlit_gsheets import GSheetsConnection
 
 # Page configuration
 st.set_page_config(page_title="Pautas de Investigaci\u00f3n y Gesti\u00f3n", layout="wide")
