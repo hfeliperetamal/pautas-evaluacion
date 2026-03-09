@@ -118,13 +118,27 @@ else:
                 final_results.append(res)
             
             df = pd.DataFrame(final_results)
-            st.success("\u00a1Evaluaci\u00f3n procesada con \u00e9xito!")
+            st.success("¡Evaluación procesada con éxito!")
             st.dataframe(df)
             
-            # TODO: Add Google Sheets connection
-            st.info("Conectando con Google Sheets para guardar los datos...")
-            # conn = st.connection("gsheets", type=GSheetsConnection)
-            # conn.create(data=df)
+            # Google Sheets connection
+            try:
+                st.info("Guardando respaldo en Google Sheets...")
+                conn = st.connection("gsheets", type=GSheetsConnection)
+                
+                # Leer datos existentes para hacer append
+                try:
+                    existing_data = conn.read()
+                    updated_df = pd.concat([existing_data, df], ignore_index=True)
+                except:
+                    # Si la hoja está vacía o no existe
+                    updated_df = df
+                
+                conn.update(data=updated_df)
+                st.success("✅ Datos respaldados correctamente en la planilla.")
+            except Exception as e:
+                st.error(f"Error al conectar con Google Sheets: {e}")
+                st.warning("Asegúrate de haber configurado correctamente los secretos (.streamlit/secrets.toml) y compartido la planilla con el correo de la cuenta de servicio.")
             
             st.balloons()
 
