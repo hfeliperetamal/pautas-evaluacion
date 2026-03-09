@@ -79,7 +79,7 @@ RUBRICS = {
         ]
     },
     "Investigaci\u00f3n 2025": {
-        "max_points": 19.75,
+        "max_points": 17.75,
         "sections": [
             {
                 "name": "Portada de Presentaci\u00f3n",
