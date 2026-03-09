@@ -133,8 +133,17 @@ else:
                     gs_secrets = st.secrets.get("gsheets", {})
 
                 if gs_secrets:
-                    raw_key = gs_secrets.get("private_key", "")
-                    clean_key = raw_key.replace("\\n", "\n")
+                    # 1. Extraer llave y limpiar espacios/comillas accidentales
+                    pk = gs_secrets.get("private_key", "").strip()
+                    if pk.startswith('"') and pk.endswith('"'):
+                        pk = pk[1:-1]
+                    
+                    # 2. Forzar saltos de l\u00ednea reales (indispensable para google-auth)
+                    pk = pk.replace("\\n", "\n")
+                    
+                    # 3. Validaci\u00f3n b\u00e1sica de formato
+                    if "-----BEGIN PRIVATE KEY-----" not in pk:
+                        st.error("\u26a0\ufe0f La llave privada no tiene el formato correcto (falta BEGIN/END tags).")
                     
                     # Creamos la conexi\u00f3n pasando los par\u00e1metros expl\u00edcitamente
                     conn = st.connection(
@@ -143,7 +152,7 @@ else:
                         spreadsheet=gs_secrets.get("spreadsheet"),
                         project_id=gs_secrets.get("project_id"),
                         private_key_id=gs_secrets.get("private_key_id"),
-                        private_key=clean_key,
+                        private_key=pk,
                         client_email=gs_secrets.get("client_email"),
                         client_id=gs_secrets.get("client_id"),
                         auth_uri=gs_secrets.get("auth_uri"),
