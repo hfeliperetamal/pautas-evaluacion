@@ -126,18 +126,33 @@ else:
             try:
                 st.info("Conectando con Google Sheets...")
                 
-                # Intentamos limpiar la llave privada si viene con saltos de l\u00ednea mal formateados
-                try:
-                    # Acceso directo a los secretos para limpieza preventiva
-                    if "connections" in st.secrets and "gsheets" in st.secrets["connections"]:
-                        pk = st.secrets["connections"]["gsheets"].get("private_key", "")
-                        if "\\n" in pk:
-                            # Si detectamos caracteres literalizados de salto de l\u00ednea, los corregimos
-                            st.warning("Aviso: Formato de llave detectado con caracteres de escape. Limpiando para compatibilidad...")
-                except:
-                    pass
+                # Extraemos y limpiamos los secretos manualmente para asegurar el formato de la llave
+                # st-gsheets-connection a veces falla si \n se lee como texto literal
+                gs_secrets = st.secrets.get("connections", {}).get("gsheets", {})
+                if not gs_secrets:
+                    gs_secrets = st.secrets.get("gsheets", {})
 
-                conn = st.connection("gsheets", type=GSheetsConnection)
+                if gs_secrets:
+                    raw_key = gs_secrets.get("private_key", "")
+                    clean_key = raw_key.replace("\\n", "\n")
+                    
+                    # Creamos la conexi\u00f3n pasando los par\u00e1metros expl\u00edcitamente
+                    conn = st.connection(
+                        "gsheets",
+                        type=GSheetsConnection,
+                        spreadsheet=gs_secrets.get("spreadsheet"),
+                        project_id=gs_secrets.get("project_id"),
+                        private_key_id=gs_secrets.get("private_key_id"),
+                        private_key=clean_key,
+                        client_email=gs_secrets.get("client_email"),
+                        client_id=gs_secrets.get("client_id"),
+                        auth_uri=gs_secrets.get("auth_uri"),
+                        token_uri=gs_secrets.get("token_uri"),
+                        auth_provider_x509_cert_url=gs_secrets.get("auth_provider_x509_cert_url"),
+                        client_x509_cert_url=gs_secrets.get("client_x509_cert_url")
+                    )
+                else:
+                    conn = st.connection("gsheets", type=GSheetsConnection)
                 
                 # Leer datos existentes sin usar el cache (ttl=0)
                 try:
@@ -147,8 +162,7 @@ else:
                     else:
                         updated_df = df
                 except Exception as read_error:
-                    # Si falla la lectura (hoja vac\u00eda), usamos solo los datos actuales
-                    st.warning(f"Aviso: No se pudieron leer datos previos ({read_error}). Iniciando nueva hoja.")
+                    st.warning(f"Aviso en lectura: Iniciando nueva hoja o formato ({read_error})")
                     updated_df = df
                 
                 # Actualizar la planilla
@@ -156,7 +170,7 @@ else:
                 st.success("\u2705 \u00a1Datos respaldados con \u00e9xito en la planilla!")
             except Exception as e:
                 st.error(f"Error cr\u00edtico de conexi\u00f3n: {e}")
-                st.info("Sugerencia: Si el error es 'Invalid private key', intenta copiar la llave del JSON y pegarla en una sola l\u00ednea reemplazando los saltos de l\u00ednea por el texto \\n dentro de los Secrets.")
+                st.info("Revisa los Secrets en Streamlit Cloud.")
             
             st.balloons()
 
